@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+COMMIT_MSG="$(cat $1)"
+COMMIT_MSG_REGEX='^(feat|fix|ref): [A-Z][a-zA-Z]+'
+
+if ! echo "$COMMIT_MSG" | grep -E "$COMMIT_MSG_REGEX" >/dev/null 2>&1; then
+  echo "Aborting commit. Your commit message does not match the required format."
+  echo "Commit message should start with 'feat', 'fix', or 'ref', followed by a colon and space, and then a message that starts with a capital letter and contains one or more letters (capital or lowercase)."
+
+  exit 1
+fi
+
+exit 0

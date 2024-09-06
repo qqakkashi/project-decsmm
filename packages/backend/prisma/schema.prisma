@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  blogger
+  advertiser
+}
+
+enum AdvertisementFileType {
+  image
+  document
+}
+
+enum AdvertisementStatus {
+  waiting
+  paused
+  finished
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String   @unique()
+  email        String   @unique()
+  phone_number String
+  password     String
+  role         UserRole
+
+  @@map("users")
+}
+
+model Advertisement {
+  id                 String              @id @default(uuid())
+  title              String
+  description        String
+  transition         Float
+  maxTransition      Float               @map("max_transition")
+  status             AdvertisementStatus
+  advertisementFiles AdvertisementFiles[]
+
+  @@map("advertisements")
+}
+
+model AdvertisementFiles {
+  id              String                @id @default(uuid())
+  url             String
+  path            String
+  type            AdvertisementFileType
+  advertisement   Advertisement         @relation(fields: [advertisementId], references: [id], onDelete: Cascade)
+  advertisementId String                @map("advertisements_id")
+
+  @@map("advertisements_files")
+}

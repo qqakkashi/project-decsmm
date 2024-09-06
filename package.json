@@ -1,4 +1,26 @@
 {
   "name": "project-decsmm",
-  "packageManager": "yarn@4.3.1"
+  "packageManager": "yarn@4.3.1",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/mobile",
+      "packages/backend"
+    ]
+  },
+  "scripts": {
+    "backend:build": "yarn workspace backend build",
+    "mobile:lint": "yarn workspace mobile lint",
+    "build": "yarn backend:build && yarn mobile:build",
+    "lint": "yarn backend:lint && yarn mobile:lint"
+  },
+  "installConfig": {
+    "hoistingLimits": "dependencies"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.4.1",
+    "@commitlint/config-conventional": "^19.4.1",
+    "husky": "^9.1.5",
+    "lint-staged": "^15.2.10"
+  }
 }

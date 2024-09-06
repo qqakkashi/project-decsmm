@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+ BRANCH_NAME="$(git rev-parse --abbrev-ref HEAD)"
+
+ VALID_BRANCH_REGEX='^((fix|feat|ref)\/[a-zA-Z0-9\-]+)$'
+
+ if [[ ! $BRANCH_NAME =~ $VALID_BRANCH_REGEX ]]; then
+     echo "There is something wrong with your branch name. Branch names in this project must follow the pattern: $VALID_BRANCH_REGEX. Your commit will be rejected. You should rename your branch to a valid name and try again."
+
+     exit 1
+ fi
+
+ yarn mobile:build
+ yarn backend:build
+ yarn mobile:lint
+ yarn backend:lint
+
+ exit 0

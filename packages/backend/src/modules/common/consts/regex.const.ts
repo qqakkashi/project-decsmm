@@ -1,0 +1,1 @@
+export const FILE_TYPE_REGEX = /^.*\.(doc|docx|pdf|png|jpg)$/
