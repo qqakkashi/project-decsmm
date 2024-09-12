@@ -1,11 +1,10 @@
+import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 
-import { StyleSheet, Text, View } from 'react-native';
-
-export default function App() {
+export default function ExploreTabScreen() {
 	return (
 		<View style={styles.container}>
-			<Text>Open up App.tsx to start working on your app!</Text>
+			<Text>Explore</Text>
 		</View>
 	);
 }

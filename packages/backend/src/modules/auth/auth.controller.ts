@@ -22,15 +22,12 @@ import {
 import {
   LoginDto
 } from './dtos/login.dto'
-import {
-  API_ROUTES
-} from '../common/consts/routes.const'
 
-@Controller(API_ROUTES.AUTH.CONTROLLER)
+@Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post(API_ROUTES.AUTH.REGISTER)
+  @Post('register')
   public async register(
     @Body() body: RegisterDto,
     @Res() response: Response,
@@ -40,13 +37,17 @@ export class AuthController {
     } = body
     return this.authService.register(
       {
-        name, email, phone_number, password, role
+        name,
+        email,
+        phone_number,
+        password,
+        role,
       },
       response,
     )
   }
 
-  @Post(API_ROUTES.AUTH.LOGIN)
+  @Post('login')
   public async login(
     @Body() body: LoginDto,
     @Res() response: Response,
@@ -54,13 +55,17 @@ export class AuthController {
     const {
       email, password
     } = body
-    return this.authService.login({
-      email, password
-    }, response)
+    return this.authService.login(
+      {
+        email,
+        password,
+      },
+      response,
+    )
   }
 
   @UseGuards(JWTAuthGuard)
-  @Post(API_ROUTES.AUTH.LOGOUT)
+  @Post('logout')
   public async logout(
     @User() user: UserFromToken,
     @Res() response: Response,
@@ -72,7 +77,7 @@ export class AuthController {
   }
 
   @UseGuards(JWTAuthGuard)
-  @Get(API_ROUTES.AUTH.ME)
+  @Get('me')
   public async me(@User() user: UserFromToken): Promise<UserWithoutPassword> {
     const {
       id
