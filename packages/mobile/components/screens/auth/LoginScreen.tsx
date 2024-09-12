@@ -8,26 +8,34 @@ import { ThemedView } from '@/components/theme/ThemedView';
 import { ThemedText } from '@/components/theme/ThemedText';
 import { Font } from '@/theme/font.theme';
 import Button from '@/components/Button';
+import { useRouter } from 'expo-router';
+import { Routes } from '@/consts/routes.const';
 
-export default function AuthScreen() {
+export default function LoginScreenComponent() {
+	const navigator = useRouter();
 	return (
 		<ParallaxScrollView
-			headerBackgroundColor={{ light: '#EAF2FF', dark: '#2897FF' }}
-			headerImage={<AntDesign name="adduser" style={styles.authHeaderImage} />}
+			headerBackgroundColor={{ light: Colors.light.blueLightest, dark: Colors.dark.blueDark }}
+			headerImage={<AntDesign name="adduser" style={styles.headerImage} />}
 		>
-			<ThemedView style={styles.authContainer}>
-				<ThemedText style={styles.authHeaderText}>Welcome!</ThemedText>
-				<ThemedView style={styles.authInputContainer}>
+			<ThemedView style={styles.container}>
+				<ThemedText style={styles.headerText}>Welcome!</ThemedText>
+				<ThemedView style={styles.inputContainer}>
 					<TextInputComponent placeholder={'Email Address'} />
 					<TextInputComponent placeholder={'Password'} password />
-					<ThemedText style={styles.authInputForgotPassword}>Forgot password?</ThemedText>
+					<ThemedText style={styles.inputForgotPassword}>Forgot password?</ThemedText>
 				</ThemedView>
-				<Button style={styles.authLoginButton} textStyle={styles.authLoginButtonText}>
+				<Button style={styles.loginButton} textStyle={styles.loginButtonText}>
 					Login
 				</Button>
-				<ThemedView style={styles.authRegisterContainer}>
-					<ThemedText style={styles.authRegisterText}>Not a member?</ThemedText>
-					<ThemedText style={styles.authRegisterLinkText}>Register now</ThemedText>
+				<ThemedView style={styles.registerContainer}>
+					<ThemedText style={styles.registerText}>Not a member?</ThemedText>
+					<ThemedText
+						style={styles.registerLinkText}
+						onPress={() => navigator.navigate(Routes.Auth.Register)}
+					>
+						Register now
+					</ThemedText>
 				</ThemedView>
 			</ThemedView>
 		</ParallaxScrollView>
@@ -35,61 +43,61 @@ export default function AuthScreen() {
 }
 
 const styles = StyleSheet.create({
-	authHeaderImage: {
+	headerImage: {
 		position: 'absolute',
 		bottom: -50,
 		left: 100,
-		color: Colors.light.borderFocus,
+		color: Colors.light.blueDarkest,
 		fontSize: 300,
 	},
-	authContainer: {
+	container: {
 		paddingTop: 40,
 		paddingHorizontal: 24,
 		flexDirection: 'column',
 		justifyContent: 'center',
 	},
-	authHeaderText: {
+	headerText: {
 		fontSize: Font.Sizes.xxxxl,
 		fontWeight: Font.Weights.black,
 		lineHeight: Font.Sizes.xxxxl,
 	},
-	authInputContainer: {
+	inputContainer: {
 		gap: 16,
 		paddingVertical: 24,
 	},
-	authInputForgotPassword: {
+	inputForgotPassword: {
 		fontSize: Font.Sizes.m,
-		color: Colors.light.borderFocus,
+		color: Colors.light.blueDarkest,
 		fontWeight: Font.Weights.semiBold,
 	},
-	authLoginButton: {
-		backgroundColor: Colors.light.borderFocus,
-		borderColor: Colors.light.borderFocus,
+	loginButton: {
+		backgroundColor: Colors.light.blueDarkest,
+		borderColor: Colors.light.blueDarkest,
 		alignItems: 'center',
 		width: '100%',
 		paddingVertical: 16.5,
 		borderRadius: 12,
 		marginBottom: 16,
 	},
-	authLoginButtonText: {
+	loginButtonText: {
 		fontSize: Font.Sizes.m,
 		color: Colors.light.background,
 		fontWeight: Font.Weights.semiBold,
 	},
-	authRegisterContainer: {
+	registerContainer: {
 		flexDirection: 'row',
 		alignSelf: 'center',
 		alignItems: 'center',
 		gap: 2,
 	},
-	authRegisterText: {
+	registerText: {
 		fontSize: Font.Sizes.m,
-		color: Colors.light.icon,
+		color: Colors.light.blackLight,
 		fontWeight: Font.Weights.regular,
 	},
-	authRegisterLinkText: {
+	registerLinkText: {
 		fontSize: Font.Sizes.m,
-		color: Colors.light.borderFocus,
+		color: Colors.light.blueDarkest,
 		fontWeight: Font.Weights.semiBold,
 	},
 });

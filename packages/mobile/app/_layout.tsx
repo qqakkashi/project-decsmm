@@ -7,6 +7,7 @@ import { queryClientConfig } from '@/modules/configs/query-client.config';
 import 'react-native-reanimated';
 
 import { useColorScheme } from 'react-native';
+import { Routes } from '@/consts/routes.const';
 
 SplashScreen.hideAsync();
 
@@ -19,8 +20,19 @@ export default function RootLayout() {
 			<QueryClientProvider client={queryClient}>
 				<AuthProvider>
 					<Stack>
-						<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-						<Stack.Screen name="auth" options={{ headerShown: false }} />
+						<Stack.Screen name={Routes.Tabs} options={{ headerShown: false }} />
+						<Stack.Screen
+							name={Routes.Auth.Login}
+							options={{ headerShown: false, gestureEnabled: false }}
+						/>
+						<Stack.Screen
+							name={Routes.Auth.Register}
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name={Routes.Auth.PhoneVerify}
+							options={{ headerShown: false }}
+						/>
 					</Stack>
 				</AuthProvider>
 			</QueryClientProvider>

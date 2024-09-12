@@ -42,15 +42,15 @@ export default function TextInputComponent(props: TextInputComponentProps) {
 		<ThemedView style={styles.container}>
 			<TextInput
 				style={[styles.input, isFocused && styles.inputFocused]}
-				placeholderTextColor={Colors.light.placeholder}
+				placeholderTextColor={Colors.light.blackLightest}
 				onFocus={handleFocus}
 				onBlur={handleBlur}
-				secureTextEntry={password ? isPasswordShown : false}
+				secureTextEntry={password ? !isPasswordShown : false}
 				{...rest}
 			/>
 			{password && (
 				<Octicons
-					name={isPasswordShown ? 'eye-closed' : 'eye'}
+					name={!isPasswordShown ? 'eye-closed' : 'eye'}
 					style={styles.icon}
 					onPress={handlePressOnPasswordIcon}
 				/>
@@ -66,12 +66,13 @@ const styles = StyleSheet.create({
 		position: 'relative',
 		flexDirection: 'row',
 		alignItems: 'center',
+		minHeight: 48,
 	},
 	icon: {
 		top: 16,
 		right: 16,
 		position: 'absolute',
-		color: Colors.light.icon,
+		color: Colors.light.blackLightest,
 		fontSize: 16,
 	},
 	input: {
@@ -79,13 +80,13 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 16,
 		paddingVertical: 14,
 		borderRadius: 12,
-		borderColor: Colors.light.border,
+		borderColor: Colors.light.greyDarkest,
 		borderWidth: 1,
 		borderStyle: 'solid',
 		width: '100%',
-		color: Colors.light.text,
+		color: Colors.light.blackDarkest,
 	},
 	inputFocused: {
-		borderColor: Colors.light.borderFocus,
+		borderColor: Colors.light.blueDarkest,
 	},
 });

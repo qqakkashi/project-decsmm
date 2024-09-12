@@ -1,32 +1,38 @@
 import React, { useEffect } from 'react';
+import { StyleSheet } from 'react-native';
 import { useMe } from '@/hooks/useMe';
-import { Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigationContainerRef } from 'expo-router';
+import { Routes } from '@/consts/routes.const';
+import Loader from '@/components/Loader';
 
 interface IAuthProviderProps {
 	children?: React.ReactNode;
 }
 
-const AuthProvider = ({ children }: IAuthProviderProps) => {
+export default function AuthProvider({ children }: IAuthProviderProps) {
 	const { data: user, isError, isPending } = useMe();
 	const navigationContainerRef = useNavigationContainerRef();
 
 	useEffect(() => {
 		if (navigationContainerRef.isReady() && (isError || !user)) {
-			navigationContainerRef.navigate('auth' as never);
+			navigationContainerRef.navigate(Routes.Auth.Login as never);
 		}
 	}, [user, isError, isPending, navigationContainerRef]);
 
 	if (isPending) {
 		return (
-			<SafeAreaView>
-				<Text>loading...</Text>
+			<SafeAreaView style={styles.container}>
+				<Loader />
 			</SafeAreaView>
 		);
 	}
 
-	return <>{children}</>;
-};
+	return children;
+}
 
-export default AuthProvider;
+const styles = StyleSheet.create({
+	container: {
+		height: '100%',
+	},
+});
