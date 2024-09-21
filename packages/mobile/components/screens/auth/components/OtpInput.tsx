@@ -12,9 +12,10 @@ import { ThemedView } from '@/components/theme/ThemedView';
 interface IOtpInputProps {
 	length?: number;
 	style?: ViewStyle;
+	setCodeAction: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function OtpInput({ length = 4, style }: IOtpInputProps) {
+export default function OtpInput({ length = 4, style, setCodeAction }: IOtpInputProps) {
 	const [code, setCode] = useState<string[]>(Array(length).fill(''));
 	const [focusedInputIndex, setFocusedInputIndex] = useState<number>(0);
 	const inputs = useRef<(TextInput | null)[]>([]);
@@ -34,6 +35,7 @@ export default function OtpInput({ length = 4, style }: IOtpInputProps) {
 		}
 
 		setCode(newCode);
+		setCodeAction(code.join(''));
 	};
 
 	const moveFocusOnDelete = (index: number) => {

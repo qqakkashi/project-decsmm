@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import {
   HttpException, HttpStatus, Injectable
 } from '@nestjs/common'
@@ -28,17 +29,16 @@ export class TwilioService {
     )
   }
 
-  public async sendVerificationMessage(numberTo: string): Promise<string> {
+  public async sendVerificationMessage(phone_number: string): Promise<string> {
     try {
       await this.twilioClient.verify.v2
         .services(this.configService.get('TWILIO_VERIFY_SID'))
         .verifications.create({
-          to:      numberTo,
+          to:      phone_number,
           channel: 'sms',
         })
       return CONFIRM_MESSAGES.SENDED
     } catch (error) {
-      console.error(error)
       throw new HttpException(
         ERROR_MESSAGES.PHONE_WRONG,
         HttpStatus.BAD_REQUEST,
@@ -47,7 +47,7 @@ export class TwilioService {
   }
 
   public async verifyCode({
-    phone,
+    phone_number,
     code,
   }: CheckVerifyPhoneDto): Promise<boolean> {
     try {
@@ -56,7 +56,7 @@ export class TwilioService {
       } = await this.twilioClient.verify.v2
         .services(this.configService.get('TWILIO_VERIFY_SID'))
         .verificationChecks.create({
-          to: phone,
+          to: phone_number,
           code,
         })
       return valid

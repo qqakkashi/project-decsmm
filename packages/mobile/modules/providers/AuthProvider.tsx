@@ -13,7 +13,6 @@ interface IAuthProviderProps {
 export default function AuthProvider({ children }: IAuthProviderProps) {
 	const { data: user, isError, isPending } = useMe();
 	const navigationContainerRef = useNavigationContainerRef();
-
 	useEffect(() => {
 		if (navigationContainerRef.isReady() && (isError || !user)) {
 			navigationContainerRef.navigate(Routes.Auth.Login as never);

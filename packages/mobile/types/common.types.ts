@@ -156,6 +156,7 @@ export interface IHttpClient {
 }
 
 export interface IResponse<T = object | object[]> {
+	headers?: Record<string, string>;
 	status: HttpStatusCode;
 	data: T;
 }
