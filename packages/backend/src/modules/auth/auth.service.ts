@@ -24,9 +24,6 @@ import {
   LoginDto
 } from './dtos/login.dto'
 import {
-  AUTH_MESSAGES
-} from '../common/consts/auth.const'
-import {
   USER_BASE_SELECT
 } from '../user/const/user.const'
 
@@ -40,7 +37,6 @@ export class AuthService {
   private async isUserExistValidator(
     name: string,
     email: string,
-    // phone_number: string,
   ): Promise<Record<'message', string>> | null {
     const isRecordExist = await this.prisma.user.findFirst({
       where: {
@@ -51,9 +47,6 @@ export class AuthService {
           {
             email,
           },
-          // {
-          //   phone_number,
-          // },
         ],
       },
     })
@@ -61,9 +54,7 @@ export class AuthService {
       const {
         name: foundedName,
         email: foundedEmail,
-        // phone_number: foundedPhoneNumber,
       } = isRecordExist
-      // eslint-disable-next-line default-case
       switch (true) {
       case foundedName === name:
         return {
@@ -75,10 +66,6 @@ export class AuthService {
         }
       default:
         return null
-        // case foundedPhoneNumber === phone_number:
-        //   return {
-        //     message: ERROR_MESSAGES.PHONE_EXIST,
-        //   };
       }
     }
     return null
@@ -86,7 +73,7 @@ export class AuthService {
 
   public async register(
     registerData: Omit<RegisterDto, 'password_confirm'>,
-    response: Response,
+    response:Response
   ): Promise<void> {
     const {
       name, email, phone_number, password, role
@@ -94,40 +81,38 @@ export class AuthService {
     const isUserExistError = await this.isUserExistValidator(
       name,
       email,
-      // phone_number,
     )
     if (isUserExistError !== null) {
       throw new HttpException(isUserExistError.message, HttpStatus.BAD_REQUEST)
     }
-    const hashedPassowrd = await bcrypt.hash(password, 10)
+    const hashedPassword = await bcrypt.hash(password, 10)
     const user = await this.prisma.user.create({
       data: {
         name,
         email,
         phone_number,
-        password: hashedPassowrd,
+        password: hashedPassword,
         role,
       },
       select: USER_BASE_SELECT,
     })
     const {
-      accessToken, refreshToken
-    } =
-      await this.jwtAuthService.generateTokens({
-        id: user.id
-      })
-    this.jwtAuthService.setAuthCookies(response, accessToken, refreshToken)
-    response.json(user).status(HttpStatus.CREATED)
-      .end()
+      accessToken,
+      refreshToken
+    } = await this.jwtAuthService.generateTokens({
+      id: user.id,
+    })
+    response.setHeader('authorization',`Bearer ${accessToken}`)
+    response.setHeader('x-refresh-token', refreshToken)
+    response.json(user).status(HttpStatus.OK)
   }
 
   public async login(loginData: LoginDto, response: Response): Promise<void> {
     const {
-      email, password
+      email,
+      password
     } = loginData
-    const {
-      password: userPassword, ...user
-    } =
+    const user =
       await this.prisma.user.findFirst({
         where: {
           email,
@@ -139,7 +124,7 @@ export class AuthService {
         HttpStatus.NOT_FOUND,
       )
     }
-    const isPasswordValid = await bcrypt.compare(password, userPassword)
+    const isPasswordValid = await bcrypt.compare(password, user.password)
     if (!isPasswordValid) {
       throw new HttpException(
         ERROR_MESSAGES.PASSOWRD_WRONG,
@@ -147,17 +132,17 @@ export class AuthService {
       )
     }
     const {
-      accessToken, refreshToken
-    } =
-      await this.jwtAuthService.generateTokens({
-        id: user.id,
-      })
-    this.jwtAuthService.setAuthCookies(response, accessToken, refreshToken)
+      accessToken,
+      refreshToken
+    } = await this.jwtAuthService.generateTokens({
+      id: user.id,
+    })
+    response.setHeader('authorization',`Bearer ${accessToken}`)
+    response.setHeader('x-refresh-token', refreshToken)
     response.json(user).status(HttpStatus.OK)
-      .end()
   }
 
-  public async logout(id: string, response: Response): Promise<void> {
+  public async logout(id: string, response: Response): Promise<boolean> {
     const isUserExist = await this.prisma.user.findFirst({
       where: {
         id,
@@ -169,13 +154,9 @@ export class AuthService {
         HttpStatus.NOT_FOUND,
       )
     }
-    this.jwtAuthService.clearAuthCookies(response)
-    response
-      .json({
-        message: AUTH_MESSAGES.LOGOUT,
-      })
-      .status(HttpStatus.OK)
-      .end()
+    response.setHeader('authorization', '')
+    response.setHeader('x-refresh-token', '')
+    return true
   }
 
   public async me(id: string): Promise<UserWithoutPassword> {

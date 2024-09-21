@@ -25,6 +25,9 @@ import {
 import {
   ConfigService
 } from '@nestjs/config'
+import {
+  TokenResponse
+} from './types/token-response.types'
 
 @Injectable()
 export class JWTAuthService {
@@ -39,7 +42,7 @@ export class JWTAuthService {
     try {
       const accessToken = this.jwtService.sign(payload, {
         privateKey: this.configService.get('JWT_SECRET'),
-        expiresIn:  '1h',
+        expiresIn:  '1m',
       })
 
       return {
@@ -67,7 +70,7 @@ export class JWTAuthService {
     }
   }
 
-  public async generateTokens(payload: TokenPayloadDto) {
+  public async generateTokens(payload: TokenPayloadDto):Promise<TokenResponse> {
     const {
       token: refreshToken
     } = await this.generateRefreshToken(payload)

@@ -5,5 +5,5 @@ import {
 export class VerifyPhoneDto {
   @IsString()
   @IsPhoneNumber('UA')
-  public phone!: string
+  public phone_number!: string
 }

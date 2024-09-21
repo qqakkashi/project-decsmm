@@ -9,14 +9,25 @@ import {
 import { Colors } from '@/theme/colors.theme';
 import Octicons from '@expo/vector-icons/Octicons';
 import { ThemedView } from '@/components/theme/ThemedView';
+import { Control, useController } from 'react-hook-form';
+import { RegisterOptions } from 'react-hook-form/dist/types/validator';
 
 interface TextInputComponentProps extends TextInputProps {
+	name: string;
+	control: Control<any>;
+	rules?: RegisterOptions;
 	onFocus?: (event: NativeSyntheticEvent<TextInputFocusEventData>) => void;
 	password?: boolean;
 }
 
 export default function TextInputComponent(props: TextInputComponentProps) {
-	const { onFocus, onBlur, password, ...rest } = props;
+	const { onFocus, onBlur, password, control, name, rules, ...rest } = props;
+	const { field } = useController({
+		defaultValue: undefined,
+		name,
+		rules,
+		control,
+	});
 
 	const [isFocused, setIsFocused] = useState(false);
 	const [isPasswordShown, setIsPasswordShown] = useState(false);
@@ -41,6 +52,8 @@ export default function TextInputComponent(props: TextInputComponentProps) {
 	return (
 		<ThemedView style={styles.container}>
 			<TextInput
+				value={field.value}
+				onChangeText={field.onChange}
 				style={[styles.input, isFocused && styles.inputFocused]}
 				placeholderTextColor={Colors.light.blackLightest}
 				onFocus={handleFocus}

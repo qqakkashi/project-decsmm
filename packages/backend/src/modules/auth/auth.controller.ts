@@ -32,18 +32,9 @@ export class AuthController {
     @Body() body: RegisterDto,
     @Res() response: Response,
   ): Promise<void> {
-    const {
-      name, email, phone_number, password, role
-    } = body
     return this.authService.register(
-      {
-        name,
-        email,
-        phone_number,
-        password,
-        role,
-      },
-      response,
+      body,
+      response
     )
   }
 
@@ -52,15 +43,9 @@ export class AuthController {
     @Body() body: LoginDto,
     @Res() response: Response,
   ): Promise<void> {
-    const {
-      email, password
-    } = body
     return this.authService.login(
-      {
-        email,
-        password,
-      },
-      response,
+      body,
+      response
     )
   }
 
@@ -69,7 +54,7 @@ export class AuthController {
   public async logout(
     @User() user: UserFromToken,
     @Res() response: Response,
-  ): Promise<void> {
+  ): Promise<boolean> {
     const {
       id
     } = user

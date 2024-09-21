@@ -1,4 +1,6 @@
 import { IHttpClient, IHttpConfig, IMap, IResponse } from '@/types/common.types';
+import { setItemAsync } from 'expo-secure-store';
+import { StorageTokenEnum } from '@/enums/storage-token.enum';
 
 export class HttpService implements IHttpClient {
 	constructor(
@@ -25,9 +27,10 @@ export class HttpService implements IHttpClient {
 					...this.populateContentTypeHeaderConfig(),
 				},
 			})
-			.then((result) => {
+			.then(async (result) => {
 				if (result) {
 					this.checkResponseStatus(result);
+					await this.setTokensToStorage(result);
 					return result.data;
 				}
 			});
@@ -42,9 +45,10 @@ export class HttpService implements IHttpClient {
 					...config?.headers,
 				},
 			})
-			.then((result) => {
+			.then(async (result) => {
 				if (result) {
 					this.checkResponseStatus(result);
+					await this.setTokensToStorage(result);
 					return result.data;
 				}
 			});
@@ -53,9 +57,10 @@ export class HttpService implements IHttpClient {
 	public async put<T, D>(url: string, data: D, config?: IHttpConfig) {
 		return this.fetchingService
 			.put<IResponse<T>, D>(this.getFullApiUrl(url), data, config)
-			.then((result) => {
+			.then(async (result) => {
 				if (result) {
 					this.checkResponseStatus(result);
+					await this.setTokensToStorage(result);
 					return result.data;
 				}
 			});
@@ -64,9 +69,10 @@ export class HttpService implements IHttpClient {
 	public async patch<T, D>(url: string, data: D, config?: IHttpConfig) {
 		return this.fetchingService
 			.patch<IResponse<T>, D>(this.getFullApiUrl(url), data, config)
-			.then((result) => {
+			.then(async (result) => {
 				if (result) {
 					this.checkResponseStatus(result);
+					await this.setTokensToStorage(result);
 					return result.data;
 				}
 			});
@@ -75,9 +81,10 @@ export class HttpService implements IHttpClient {
 	public async delete<T>(url: string, config?: IHttpConfig) {
 		return this.fetchingService
 			.delete<IResponse<T>>(this.getFullApiUrl(url), config)
-			.then((result) => {
+			.then(async (result) => {
 				if (result) {
 					this.checkResponseStatus(result);
+					await this.setTokensToStorage(result);
 					return result.data;
 				}
 			});
@@ -87,6 +94,13 @@ export class HttpService implements IHttpClient {
 		return {
 			'Content-Type': 'application/json',
 		};
+	}
+
+	private async setTokensToStorage<T>(result: IResponse<T>) {
+		await Promise.all([
+			setItemAsync(StorageTokenEnum.ACCESS, result.headers!['authorization']),
+			setItemAsync(StorageTokenEnum.REFRESH, result.headers!['x-refresh-token']),
+		]);
 	}
 
 	private getFullApiUrl(url: string) {
