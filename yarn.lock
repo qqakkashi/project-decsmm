@@ -7800,6 +7800,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-image@npm:~1.12.15":
+  version: 1.12.15
+  resolution: "expo-image@npm:1.12.15"
+  peerDependencies:
+    expo: "*"
+  checksum: 10c0/1ff8aa5df06a2bff5bf620a9884096aeadcdc50fc629237ab79b74eee6bad7b5f659c945e65d3063aeeaa54412176bd8d57019599febad1ff072951337a4e888
+  languageName: node
+  linkType: hard
+
 "expo-keep-awake@npm:~13.0.2":
   version: 13.0.2
   resolution: "expo-keep-awake@npm:13.0.2"
@@ -11825,6 +11834,7 @@ __metadata:
     eslint-plugin-react-native: "npm:^4.1.0"
     expo: "npm:~51.0.28"
     expo-constants: "npm:~16.0.2"
+    expo-image: "npm:~1.12.15"
     expo-linking: "npm:~6.3.1"
     expo-router: "npm:~3.5.23"
     expo-secure-store: "npm:~13.0.2"

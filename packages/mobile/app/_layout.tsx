@@ -20,17 +20,12 @@ export default function RootLayout() {
 			<QueryClientProvider client={queryClient}>
 				<AuthProvider>
 					<Stack>
-						<Stack.Screen name={Routes.Tabs} options={{ headerShown: false }} />
 						<Stack.Screen
-							name={Routes.Auth.Login}
-							options={{ headerShown: false, gestureEnabled: false }}
-						/>
-						<Stack.Screen
-							name={Routes.Auth.Register}
+							name={Routes.makeRouteNameForStackFromStartRoute(Routes.Tabs.Explore)}
 							options={{ headerShown: false }}
 						/>
 						<Stack.Screen
-							name={Routes.Auth.PhoneVerify}
+							name={Routes.makeRouteNameForStackFromStartRoute(Routes.Auth.Login)}
 							options={{ headerShown: false }}
 						/>
 					</Stack>
