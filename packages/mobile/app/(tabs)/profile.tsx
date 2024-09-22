@@ -2,10 +2,10 @@ import { StyleSheet, Text } from 'react-native';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function ExploreTabScreen() {
+export default function ProfileTabScreen() {
 	return (
 		<SafeAreaView style={styles.container}>
-			<Text>Explore</Text>
+			<Text>Profile</Text>
 		</SafeAreaView>
 	);
 }

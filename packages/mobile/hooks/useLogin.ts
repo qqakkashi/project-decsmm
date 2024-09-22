@@ -12,8 +12,8 @@ export const useLogin = () => {
 		mutationFn: async (payload: LoginPayload) => {
 			return authService.login(payload);
 		},
-		onSuccess: async () => {
-			navigation.push(Routes.Tabs);
+		onSuccess: () => {
+			navigation.push(Routes.Tabs.Name);
 		},
 	});
 };

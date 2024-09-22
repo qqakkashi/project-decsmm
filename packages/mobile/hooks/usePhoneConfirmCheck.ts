@@ -7,7 +7,6 @@ export const usePhoneConfirmCheck = () => {
 	return useMutation({
 		mutationKey: [QUERY_KEYS.PHONE],
 		mutationFn: async (payload: ConfirmCheckPayload) => {
-			console.log(payload);
 			return phoneService.confirmCheck(payload);
 		},
 	});
