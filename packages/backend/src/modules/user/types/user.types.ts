@@ -20,8 +20,8 @@ export enum UserRole {
 }
 
 export type UserFromToken = Pick<IUser, 'id'>
-;export type UserWithoutPassword = Omit<IUser, 'password'>
-;export type UserListResult = {
+export type UserWithoutPassword = Omit<IUser, 'password'>
+export type UserListResult = {
   data: Array<UserWithoutPassword>;
-  metaData: ResultMetaData
-};
+  metaData: ResultMetaData;
+}

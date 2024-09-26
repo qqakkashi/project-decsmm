@@ -11,7 +11,7 @@ import {
   AuthService
 } from './auth.service'
 import {
-  User
+  CurrentUser,
 } from '../common/decorators/user.decorator'
 import {
   UserFromToken, UserWithoutPassword
@@ -52,7 +52,7 @@ export class AuthController {
   @UseGuards(JWTAuthGuard)
   @Post('logout')
   public async logout(
-    @User() user: UserFromToken,
+    @CurrentUser() user: UserFromToken,
     @Res() response: Response,
   ): Promise<boolean> {
     const {
@@ -63,7 +63,7 @@ export class AuthController {
 
   @UseGuards(JWTAuthGuard)
   @Get('me')
-  public async me(@User() user: UserFromToken): Promise<UserWithoutPassword> {
+  public async me(@CurrentUser() user: UserFromToken): Promise<UserWithoutPassword> {
     const {
       id
     } = user

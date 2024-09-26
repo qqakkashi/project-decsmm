@@ -24,30 +24,34 @@ enum AdvertisementFileType {
 }
 
 enum AdvertisementStatus {
-  waiting
+  progress
   paused
   finished
 }
 
 model User {
-  id           String   @id @default(uuid())
-  name         String   @unique()
-  email        String   @unique()
-  phone_number String
-  password     String
-  role         UserRole
+  id            String          @id @default(uuid())
+  name          String          @unique()
+  email         String          @unique()
+  phone_number  String
+  password      String
+  role          UserRole
+  Advertisement Advertisement[]
 
   @@map("users")
 }
 
 model Advertisement {
-  id                 String              @id @default(uuid())
+  id                 String               @id @default(uuid())
   title              String
   description        String
   transition         Float
-  maxTransition      Float               @map("max_transition")
+  maxTransition      Float                @map("max_transition")
   status             AdvertisementStatus
   advertisementFiles AdvertisementFiles[]
+
+  creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId String @map("creator_id")
 
   @@map("advertisements")
 }

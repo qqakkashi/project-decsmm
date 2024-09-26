@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 
-export default function AnalyticsTabScreen() {
+export default function ExploreTabScreen() {
 	return (
 		<View style={styles.container}>
-			<Text>Analytics</Text>
+			<Text>Explore</Text>
 		</View>
 	);
 }

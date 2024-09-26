@@ -6,11 +6,8 @@ import {
   Injectable,
 } from '@nestjs/common'
 import {
-  Request
+  Request, Response,
 } from 'express'
-import {
-  TOKEN_TYPES
-} from '../consts/token.const'
 import {
   ERROR_MESSAGES
 } from '../consts/error.const'
@@ -37,44 +34,82 @@ export class RoleBloggerGuard implements CanActivate {
     private readonly userService: UserService,
   ) {}
 
-  async canActivate(context: ExecutionContext) {
+  public async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest()
-    const token = request.cookies[TOKEN_TYPES.JWT] ?? null
-    if (!token) {
-      throw new HttpException(
-        ERROR_MESSAGES.UNAUTHORIZED,
-        HttpStatus.UNAUTHORIZED,
-      )
+    const response: Response = context.switchToHttp().getResponse()
+    const authHeader = request.headers['authorization']
+    if (!authHeader) {
+      throw new HttpException(ERROR_MESSAGES.UNAUTHORIZED, HttpStatus.UNAUTHORIZED)
+    }
+
+    const accessToken = authHeader.split(' ')[1]
+    if (!accessToken) {
+      throw new HttpException(ERROR_MESSAGES.UNAUTHORIZED, HttpStatus.UNAUTHORIZED)
     }
 
     try {
-      const isValid = await this.validateRequest(request)
-      return isValid
-    } catch (e) {
-      throw new HttpException(
-        ERROR_MESSAGES.UNAUTHORIZED,
-        HttpStatus.UNAUTHORIZED,
-      )
+      return await this.validateAccessToken(accessToken, request)
+    } catch (error) {
+      return this.tryRefreshTokens(request, response)
     }
   }
 
-  public async validateRequest(request: Request): Promise<boolean> {
-    const token: string | undefined = request.cookies[TOKEN_TYPES.JWT]
-
-    if (!token) {
-      return false
-    }
-    const payload: TokenPayloadDto = this.jwtAuthService.verifyToken(token)
-    const user: UserWithoutPassword = await this.userService.getUserById(
-      payload.id,
-    )
-    if (user.role !== UserRole.blogger) {
-      throw new HttpException(
-        ERROR_MESSAGES.BLOGGER_ONLY,
-        HttpStatus.FORBIDDEN,
+  public async validateAccessToken(token:string,request: Request): Promise<boolean> {
+    try {
+      const payload: TokenPayloadDto = this.jwtAuthService.verifyToken(token)
+      if (!payload) {
+        return false
+      }
+      const user: UserWithoutPassword = await this.userService.getUserById(
+        payload.id,
       )
+      if (user.role !== UserRole.blogger) {
+        throw new HttpException(
+          ERROR_MESSAGES.BLOGGER_ONLY,
+          HttpStatus.FORBIDDEN,
+        )
+      }
+      request.user = user
+      return true
+    } catch (error) {
+      throw new HttpException(ERROR_MESSAGES.UNAUTHORIZED, HttpStatus.UNAUTHORIZED)
+    }
+  }
+
+  private async tryRefreshTokens(
+    request: Request,
+    response: Response,
+  ): Promise<boolean> {
+    const refreshToken = request.headers['x-refresh-token']
+
+    if (!refreshToken) {
+      throw new HttpException(ERROR_MESSAGES.UNAUTHORIZED, HttpStatus.UNAUTHORIZED)
     }
 
-    return true
+    try {
+      const payload: TokenPayloadDto = this.jwtAuthService.verifyToken(refreshToken as string)
+
+      if (!payload) {
+        throw new HttpException(ERROR_MESSAGES.UNAUTHORIZED, HttpStatus.UNAUTHORIZED)
+      }
+      const tokens = await this.jwtAuthService.generateTokens(payload)
+
+      response.setHeader('authorization', `Bearer ${tokens.accessToken}`)
+      response.setHeader('x-refresh-token', tokens.refreshToken)
+
+      const user: UserWithoutPassword = await this.userService.getUserById(
+        payload.id,
+      )
+      if (user.role !== UserRole.blogger) {
+        throw new HttpException(
+          ERROR_MESSAGES.BLOGGER_ONLY,
+          HttpStatus.FORBIDDEN,
+        )
+      }
+      request.user = user
+      return true
+    } catch (error) {
+      throw new HttpException(ERROR_MESSAGES.UNAUTHORIZED, HttpStatus.UNAUTHORIZED)
+    }
   }
 }

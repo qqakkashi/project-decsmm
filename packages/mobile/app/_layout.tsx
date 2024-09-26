@@ -8,6 +8,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from 'react-native';
 import { Routes } from '@/consts/routes.const';
+import SafeAreaViewProvider from '@/modules/providers/SafeAreaViewProvider';
 
 SplashScreen.hideAsync();
 
@@ -18,18 +19,24 @@ export default function RootLayout() {
 	return (
 		<ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
 			<QueryClientProvider client={queryClient}>
-				<AuthProvider>
-					<Stack>
-						<Stack.Screen
-							name={Routes.makeRouteNameForStackFromStartRoute(Routes.Tabs.Explore)}
-							options={{ headerShown: false }}
-						/>
-						<Stack.Screen
-							name={Routes.makeRouteNameForStackFromStartRoute(Routes.Auth.Login)}
-							options={{ headerShown: false }}
-						/>
-					</Stack>
-				</AuthProvider>
+				<SafeAreaViewProvider>
+					<AuthProvider>
+						<Stack initialRouteName="(tabs)/explore">
+							<Stack.Screen
+								name={Routes.makeRouteName(Routes.Tabs.Explore, 0)}
+								options={{ headerShown: false }}
+							/>
+							<Stack.Screen
+								name={Routes.makeRouteName(Routes.Auth.Login, 0)}
+								options={{ headerShown: false }}
+							/>
+							<Stack.Screen
+								name={Routes.makeRouteName(Routes.Campaigns.Create, 0)}
+								options={{ headerShown: false }}
+							/>
+						</Stack>
+					</AuthProvider>
+				</SafeAreaViewProvider>
 			</QueryClientProvider>
 		</ThemeProvider>
 	);

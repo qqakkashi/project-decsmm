@@ -6,15 +6,15 @@ export default function AuthLayout() {
 	return (
 		<Stack>
 			<Stack.Screen
-				name={Routes.makeRouteNameForStackFromEndRoute(Routes.Auth.Login)}
+				name={Routes.makeRouteName(Routes.Auth.Login, 1)}
 				options={{ headerShown: false }}
 			/>
 			<Stack.Screen
-				name={Routes.makeRouteNameForStackFromEndRoute(Routes.Auth.Register)}
+				name={Routes.makeRouteName(Routes.Auth.Register, 1)}
 				options={{ headerShown: false, gestureEnabled: false }}
 			/>
 			<Stack.Screen
-				name={Routes.makeRouteNameForStackFromEndRoute(Routes.Auth.PhoneVerify)}
+				name={Routes.makeRouteName(Routes.Auth.PhoneVerify, 1)}
 				options={{ headerShown: false }}
 			/>
 		</Stack>

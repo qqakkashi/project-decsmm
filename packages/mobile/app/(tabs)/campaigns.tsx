@@ -1,19 +1,6 @@
-import { StyleSheet, Text } from 'react-native';
 import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import CampaignsScreenComponent from '@/components/screens/tabs/CampaignsScreen';
 
 export default function CampaignsTabScreen() {
-	return (
-		<SafeAreaView style={styles.container}>
-			<Text>Campaigns</Text>
-		</SafeAreaView>
-	);
+	return <CampaignsScreenComponent />;
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-});

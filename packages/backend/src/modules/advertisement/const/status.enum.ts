@@ -1,5 +1,5 @@
 export enum StatusEnum {
-    WAITING = 'waiting',
+    PROGRESS = 'progress',
     PAUSED = 'paused',
     FINISHED = 'finished',
 }

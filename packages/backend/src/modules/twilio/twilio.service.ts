@@ -37,7 +37,7 @@ export class TwilioService {
           to:      phone_number,
           channel: 'sms',
         })
-      return CONFIRM_MESSAGES.SENDED
+      return CONFIRM_MESSAGES.SENT
     } catch (error) {
       throw new HttpException(
         ERROR_MESSAGES.PHONE_WRONG,

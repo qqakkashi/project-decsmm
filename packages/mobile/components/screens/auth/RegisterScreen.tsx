@@ -1,11 +1,10 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import { Colors } from '@/theme/colors.theme';
 import { Font } from '@/theme/font.theme';
 import TextInputComponent from '@/components/TextInputComponent';
 import { ThemedView } from '@/components/theme/ThemedView';
 import { ThemedText } from '@/components/theme/ThemedText';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '@/components/Button';
 import { useRouter } from 'expo-router';
 import { Routes } from '@/consts/routes.const';
@@ -73,7 +72,7 @@ export default function RegisterScreenComponent() {
 	};
 	return (
 		<KeyboardView scroll>
-			<SafeAreaView style={styles.container}>
+			<View style={styles.container}>
 				<ThemedView style={styles.headerContainer}>
 					<ThemedText style={styles.headerMainText}>Register</ThemedText>
 					<ThemedText style={styles.headerSubText}>
@@ -155,7 +154,7 @@ export default function RegisterScreenComponent() {
 						Login now
 					</ThemedText>
 				</ThemedView>
-			</SafeAreaView>
+			</View>
 		</KeyboardView>
 	);
 }
@@ -163,8 +162,8 @@ export default function RegisterScreenComponent() {
 const styles = StyleSheet.create({
 	container: {
 		flexDirection: 'column',
-		paddingTop: 24,
 		paddingHorizontal: 24,
+		paddingTop: 24,
 		backgroundColor: Colors.light.background,
 		height: '100%',
 	},

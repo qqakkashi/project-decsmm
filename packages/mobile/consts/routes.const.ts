@@ -1,6 +1,6 @@
 export const Routes = {
 	Tabs: {
-		Explore: '(tabs)/index',
+		Explore: '(tabs)/explore',
 		Campaigns: '(tabs)/campaigns',
 		Analytics: '(tabs)/analytics',
 		Profile: '(tabs)/profile',
@@ -10,10 +10,10 @@ export const Routes = {
 		Register: 'auth/register',
 		PhoneVerify: 'auth/phone-verify',
 	},
-	makeRouteNameForStackFromEndRoute: (string: string) => {
-		return string.split('/')[1];
+	Campaigns: {
+		Create: 'campaigns/create',
 	},
-	makeRouteNameForStackFromStartRoute: (string: string) => {
-		return string.split('/')[0];
+	makeRouteName: (string: string, index: number) => {
+		return string.split('/')[index];
 	},
-} as const;
+};

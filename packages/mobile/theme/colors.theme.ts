@@ -9,6 +9,9 @@ export const Colors = {
 		blueDarkest: '#006FFD',
 		blueLightest: '#EAF2FF',
 		blueDark: '#2897FF',
+		greyLight: '#F8F9FE',
+		greenLightest: '#E7F4E8',
+		greenLight: '#3AC0A0',
 		red: '#F44336',
 	},
 	light: {
@@ -21,6 +24,9 @@ export const Colors = {
 		blueDarkest: '#006FFD',
 		blueLightest: '#EAF2FF',
 		blueDark: '#2897FF',
+		greyLight: '#F8F9FE',
+		greenLightest: '#E7F4E8',
+		greenLight: '#3AC0A0',
 		red: '#F44336',
 	},
 };

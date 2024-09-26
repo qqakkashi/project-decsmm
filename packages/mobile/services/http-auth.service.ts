@@ -12,7 +12,6 @@ export class EnhancedWithAuthHttpService implements IHttpClient {
 
 	public async get<R>(url: string, config: IHttpConfig = {}): Promise<R> {
 		const conf = await this.attachAuthHeader(config);
-
 		return (await this.httpService.get<R>(url, conf)) as Promise<R>;
 	}
 
