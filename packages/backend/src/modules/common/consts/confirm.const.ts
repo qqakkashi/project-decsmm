@@ -1,5 +1,5 @@
 export const CONFIRM_MESSAGES = {
-  SENDED: 'Message sended to your phone',
+  SENT: 'Message sent to your phone',
 } as const
 
 export const USER_MESSAGES = {

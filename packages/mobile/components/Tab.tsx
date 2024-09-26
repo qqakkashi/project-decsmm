@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { ThemedView } from '@/components/theme/ThemedView';
 import { ThemedText } from '@/components/theme/ThemedText';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
@@ -54,6 +54,9 @@ export default function Tab({ state, descriptors, navigation }: BottomTabBarProp
 					});
 				};
 
+				if (route.name === 'index') {
+					return null;
+				}
 				return (
 					<TouchableOpacity
 						key={route.key}
@@ -84,14 +87,13 @@ export default function Tab({ state, descriptors, navigation }: BottomTabBarProp
 const styles = StyleSheet.create({
 	container: {
 		position: 'absolute',
-		width: '80%',
+		width: Dimensions.get('window').width * 0.9,
 		backgroundColor: Colors.light.background,
 		flexDirection: 'row',
 		alignItems: 'center',
 		alignSelf: 'center',
-		bottom: 16,
+		bottom: 0,
 		padding: 16,
-		borderRadius: 24,
 	},
 	content: {
 		flex: 1,
@@ -103,6 +105,7 @@ const styles = StyleSheet.create({
 	icon: {
 		width: 20,
 		height: 20,
+		objectFit: 'contain',
 	},
 	text: {
 		fontSize: Font.Sizes.s,

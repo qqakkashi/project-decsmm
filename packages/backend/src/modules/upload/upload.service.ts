@@ -1,5 +1,5 @@
 import {
-  Injectable
+  Injectable, InternalServerErrorException,
 } from '@nestjs/common'
 import {
   Express
@@ -42,9 +42,8 @@ export class UploadService {
     } = await supabase.storage
       .from(BUCKET_NAME)
       .upload(filePath, file.buffer)
-
     if (error) {
-      throw new Error(ERROR_MESSAGES.UPLOAD_FILE)
+      throw new InternalServerErrorException(ERROR_MESSAGES.UPLOAD_FILE)
     }
 
     return {
@@ -66,7 +65,7 @@ export class UploadService {
     case fileType.includes('jpg'):
       return AdvertisementFileType.image
     default:
-      throw new Error(ERROR_MESSAGES.UPLOAD_FILE)
+      throw new InternalServerErrorException(ERROR_MESSAGES.UPLOAD_FILE)
     }
   }
 }

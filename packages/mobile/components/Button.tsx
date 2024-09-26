@@ -1,7 +1,7 @@
 import { StyleProp, Text, TextStyle, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import React from 'react';
 
-interface IButtonComponentProps extends TouchableOpacityProps {
+export interface IButtonComponentProps extends TouchableOpacityProps {
 	textStyle?: StyleProp<TextStyle>;
 }
 

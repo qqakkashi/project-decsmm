@@ -13,7 +13,7 @@ export const useLogin = () => {
 			return authService.login(payload);
 		},
 		onSuccess: () => {
-			navigation.push(Routes.Tabs.Name);
+			navigation.push(Routes.Tabs.Explore);
 		},
 	});
 };

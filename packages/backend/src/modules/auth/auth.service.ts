@@ -127,7 +127,7 @@ export class AuthService {
     const isPasswordValid = await bcrypt.compare(password, user.password)
     if (!isPasswordValid) {
       throw new HttpException(
-        ERROR_MESSAGES.PASSOWRD_WRONG,
+        ERROR_MESSAGES.PASSWORD_WRONG,
         HttpStatus.BAD_REQUEST,
       )
     }

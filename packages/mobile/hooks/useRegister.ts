@@ -13,7 +13,7 @@ export const useRegister = () => {
 			return authService.register(payload);
 		},
 		onSuccess: () => {
-			navigation.push(Routes.makeRouteNameForStackFromStartRoute(Routes.Tabs.Explore));
+			navigation.push(Routes.Tabs.Explore);
 		},
 	});
 };

@@ -1,15 +1,36 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
-import { Express } from "express";
-import { UploadService } from "../upload/upload.service";
 import {
-  DEFAULT_STATUS,
-  DEFAULT_TRANSITION,
-  DEFAULT_TRANSITION_MAX,
-} from "./const/advertisement.const";
-import { CreateAdvertisementDto } from "./dto/create-advertisement.dto";
-import { UpdateAdvertisementDto } from "./dto/update-advertisement.dto";
-import { DeleteAdvertisementDto } from "./dto/delete-advertisement";
+  Injectable, InternalServerErrorException
+} from '@nestjs/common'
+import {
+  PrismaService
+} from '../prisma/prisma.service'
+import type {
+  Express
+} from 'express'
+import {
+  UploadService
+} from '../upload/upload.service'
+import {
+  ADVERTISEMENT_BASE_SELECT,
+} from './const/advertisement.const'
+import {
+  CreateAdvertisementDto
+} from './dto/create-advertisement.dto'
+import {
+  UpdateAdvertisementDto
+} from './dto/update-advertisement.dto'
+import {
+  DeleteAdvertisementDto
+} from './dto/delete-advertisement'
+import {
+  UserFromToken
+} from '../user/types/user.types'
+import {
+  GetAdvertisementsDto
+} from './dto/get-advertisements.dto'
+import {
+  $Enums,
+} from '@prisma/client'
 
 @Injectable()
 export class AdvertisementService {
@@ -19,38 +40,47 @@ export class AdvertisementService {
   ) {}
 
   public async create(
+    currentUser:UserFromToken,
     body: CreateAdvertisementDto,
     files: Array<Express.Multer.File>,
   ) {
     try {
-      const { title, description, transition, maxTransition } = body;
-      const uploadedFileData = await this.uploadService.uploadFiles(files);
+      const {
+        id
+      } = currentUser
+      const {
+        title, description, transition, maxTransition
+      } = body
+      const uploadedFileData = await this.uploadService.uploadFiles(files)
       const advertisementFilesData = uploadedFileData.map(
-        ({ url, type, path }) => {
+        ({
+          url, type, path
+        }) => {
           return {
             type,
             url,
             path,
-          };
+          }
         },
-      );
+      )
       return this.prismaService.advertisement.create({
         data: {
           title,
           description,
-          transition: Number(transition) ?? DEFAULT_TRANSITION,
-          maxTransition: Number(maxTransition) ?? DEFAULT_TRANSITION_MAX,
+          transition:         Number(transition),
+          maxTransition:      Number(maxTransition),
           advertisementFiles: {
             create: advertisementFilesData,
           },
-          status: DEFAULT_STATUS,
+          status:    $Enums.AdvertisementStatus.progress,
+          creatorId: id
         },
         include: {
           advertisementFiles: true,
         },
-      });
+      })
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -70,24 +100,26 @@ export class AdvertisementService {
           },
         })
       ).map((file) => {
-        return file.path;
-      });
+        return file.path
+      })
       const updatedFiles = await this.uploadService.replaceFiles(
         files,
         oldFiles,
-      );
-      const advertisementFilesData = updatedFiles.map(({ url, type, path }) => {
+      )
+      const advertisementFilesData = updatedFiles.map(({
+        url, type, path
+      }) => {
         return {
           type,
           url,
           path,
-        };
-      });
+        }
+      })
       await this.prismaService.advertisementFiles.deleteMany({
         where: {
           advertisementId: id,
         },
-      });
+      })
 
       await this.prismaService.advertisement.update({
         where: {
@@ -98,7 +130,7 @@ export class AdvertisementService {
             create: advertisementFilesData,
           },
         },
-      });
+      })
     }
     return this.prismaService.advertisement.update({
       where: {
@@ -107,7 +139,7 @@ export class AdvertisementService {
       data: {
         ...body,
       },
-    });
+    })
   }
 
   public async delete(body: DeleteAdvertisementDto) {
@@ -123,15 +155,41 @@ export class AdvertisementService {
         },
       })
     ).map((file) => {
-      return file.path;
-    });
-    await this.uploadService.deleteFiles(filesPath);
+      return file.path
+    })
+    await this.uploadService.deleteFiles(filesPath)
     return this.prismaService.advertisement.deleteMany({
       where: {
         id: {
           in: body.id,
         },
       },
-    });
+    })
+  }
+
+  public async getUserAdvertisements(user: UserFromToken, query: GetAdvertisementsDto) {
+    const {
+      page,pageSize
+    } = query
+    const {
+      id,
+    } = user
+    const advertisements = await  this.prismaService.advertisement.findMany({
+      skip:    (page - 1) * pageSize,
+      take:    pageSize,
+      where: {
+        status:    query.status,
+        creatorId: id,
+      },
+      select: {
+        ...ADVERTISEMENT_BASE_SELECT,
+        advertisementFiles: {
+          select: {
+            url: true
+          }
+        }
+      }
+    })
+    return advertisements
   }
 }
