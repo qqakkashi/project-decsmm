@@ -1,27 +1,18 @@
 import {
   Controller,
-  FileTypeValidator,
-  MaxFileSizeValidator,
-  ParseFilePipe,
   Post,
-  Res,
-  UploadedFile,
   UploadedFiles,
   UseInterceptors
 } from '@nestjs/common'
 import {
-  AnyFilesInterceptor, FileInterceptor,
   FilesInterceptor
 } from '@nestjs/platform-express'
 import {
   UploadService
 } from './upload.service'
-import {
+import type {
   Express
 } from 'express'
-import {
-  multerConfig
-} from '../../configs/multer.config'
 
 @Controller('upload')
 export class UploadController {

@@ -11,7 +11,7 @@ import {
   UploadService
 } from '../upload/upload.service'
 import {
-  ADVERTISEMENT_BASE_SELECT,
+  ADVERTISEMENT_BASE_SELECT
 } from './const/advertisement.const'
 import {
   CreateAdvertisementDto
@@ -29,7 +29,7 @@ import {
   GetAdvertisementsDto
 } from './dto/get-advertisements.dto'
 import {
-  $Enums,
+  $Enums
 } from '@prisma/client'
 
 @Injectable()
@@ -51,15 +51,14 @@ export class AdvertisementService {
       const {
         title, description, transition, maxTransition
       } = body
-      const uploadedFileData = await this.uploadService.uploadFiles(files)
-      const advertisementFilesData = uploadedFileData.map(
+      const advertisementFilesData = (await this.uploadService.uploadFiles(files)).map(
         ({
-          url, type, path
+          url, type, key
         }) => {
           return {
             type,
             url,
-            path,
+            key,
           }
         },
       )
@@ -90,29 +89,30 @@ export class AdvertisementService {
     files: Array<Express.Multer.File>,
   ) {
     if (files.length > 0) {
-      const oldFiles: Array<string> = (
+      const oldFilesKeys: Array<string> = (
         await this.prismaService.advertisementFiles.findMany({
           where: {
             advertisementId: id,
           },
           select: {
-            path: true,
+            key: true,
           },
         })
-      ).map((file) => {
-        return file.path
+      ).map(({
+        key
+      }) => {
+        return key
       })
-      const updatedFiles = await this.uploadService.replaceFiles(
+      const advertisementFilesData = (await this.uploadService.replaceFiles(
         files,
-        oldFiles,
-      )
-      const advertisementFilesData = updatedFiles.map(({
-        url, type, path
+        oldFilesKeys,
+      )).map(({
+        url, type, key
       }) => {
         return {
           type,
           url,
-          path,
+          key,
         }
       })
       await this.prismaService.advertisementFiles.deleteMany({
@@ -143,7 +143,7 @@ export class AdvertisementService {
   }
 
   public async delete(body: DeleteAdvertisementDto) {
-    const filesPath = (
+    const filesKeys = (
       await this.prismaService.advertisementFiles.findMany({
         where: {
           advertisementId: {
@@ -151,13 +151,15 @@ export class AdvertisementService {
           },
         },
         select: {
-          path: true,
+          key: true,
         },
       })
-    ).map((file) => {
-      return file.path
+    ).map(({
+      key
+    }) => {
+      return key
     })
-    await this.uploadService.deleteFiles(filesPath)
+    await this.uploadService.deleteFiles(filesKeys)
     return this.prismaService.advertisement.deleteMany({
       where: {
         id: {
@@ -174,10 +176,10 @@ export class AdvertisementService {
     const {
       id,
     } = user
-    const advertisements = await  this.prismaService.advertisement.findMany({
-      skip:    (page - 1) * pageSize,
-      take:    pageSize,
-      where: {
+    return this.prismaService.advertisement.findMany({
+      skip:   (page - 1) * pageSize,
+      take:   pageSize,
+      where:  {
         status:    query.status,
         creatorId: id,
       },
@@ -190,6 +192,5 @@ export class AdvertisementService {
         }
       }
     })
-    return advertisements
   }
 }

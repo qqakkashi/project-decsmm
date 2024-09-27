@@ -1,4 +1,4 @@
-import { AdvertisementStatusEnum } from '@/consts/enum/advertisement-status.enum';
+import { AdvertisementStatusEnum } from '@/enums/advertisement-status.enum';
 
 export type GetAdvertisementsPayload = {
 	status?: AdvertisementStatusEnum;
