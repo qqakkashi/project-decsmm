@@ -4,7 +4,7 @@ import { capitalize } from '@/modules/utils/capitalize';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { Font } from '@/theme/font.theme';
-import { AdvertisementStatusEnum } from '@/consts/enum/advertisement-status.enum';
+import { AdvertisementStatusEnum } from '@/enums/advertisement-status.enum';
 
 interface IStatusNavigatorProps {
 	statuses: Array<AdvertisementStatusEnum>;

@@ -5,10 +5,7 @@ import Header from '@/components/Header';
 import { Colors } from '@/theme/colors.theme';
 import StatusNavigator from '@/components/screens/tabs/components/campaigns/StatusNavigator';
 import { useGetAdvertisements } from '@/hooks/useGetAdvertisements';
-import {
-	AdvertisementStatusEnum,
-	AdvertisementStatuses,
-} from '@/consts/enum/advertisement-status.enum';
+import { AdvertisementStatusEnum, AdvertisementStatuses } from '@/enums/advertisement-status.enum';
 import Loader from '@/components/Loader';
 import AdvertisementsList from '@/components/screens/tabs/components/campaigns/AdvertisementsList';
 import { ThemedView } from '@/components/theme/ThemedView';

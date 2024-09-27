@@ -8,8 +8,10 @@ declare namespace NodeJS {
     SECRET_COOKIE?:string;
     DATABASE_URL?:string;
     JWT_SECRET?:string;
-    SUPABASE_URL?:string;
-    SUPABASE_KEY?:string;
+    AWS_BUCKET_NAME?:string;
+    AWS_ACCESSKEYID?:string;
+    AWS_SECRETACCESSKEY?:string;
+    AWS_REGION?:string;
   }
 }
 

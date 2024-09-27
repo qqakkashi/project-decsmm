@@ -59,7 +59,7 @@ model Advertisement {
 model AdvertisementFiles {
   id              String                @id @default(uuid())
   url             String
-  path            String
+  key             String
   type            AdvertisementFileType
   advertisement   Advertisement         @relation(fields: [advertisementId], references: [id], onDelete: Cascade)
   advertisementId String                @map("advertisements_id")
